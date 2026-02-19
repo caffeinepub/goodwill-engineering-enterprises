@@ -1,0 +1,59 @@
+{
+  "kind": "build_request",
+  "title": "Replace browsing functionality with 'Browse All Products' link bar",
+  "projectName": "Goodwill Industrial",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Remove the search and category filtering functionality from ProductCatalogSection component",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "take out the browsing too"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Search input field is removed from ProductCatalogSection",
+        "Category filter buttons are removed from ProductCatalogSection",
+        "Products are displayed in the grid without any filtering controls"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add a horizontal bar under the products grid in ProductCatalogSection that displays 'Browse All Products' text with a link to the catalog",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "just add a bar like the one last time under products saying \"browse all products\" and leave it like that because the linnk to the catalog will be kept there"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A horizontal bar component is rendered below the products grid",
+        "The bar displays the text 'Browse All Products'",
+        "The bar includes a clickable link that preserves the catalog URL/navigation",
+        "The bar styling matches the design pattern used previously in the application"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify backend logic or data models",
+    "Preserve the existing product grid display functionality",
+    "Keep the catalog link/URL structure intact"
+  ],
+  "nonGoals": [
+    "Adding new product filtering capabilities",
+    "Modifying the product card component",
+    "Changing the admin panel functionality"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

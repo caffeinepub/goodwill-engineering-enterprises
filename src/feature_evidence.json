@@ -1,0 +1,45 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-remove-the-search-and-category-filtering-functionality-from-productcatalogsection-component",
+      "featureTitle": "Remove the search and category filtering functionality from ProductCatalogSection component",
+      "files": [
+        "frontend/src/components/store/ProductCatalogSection.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-horizontal-bar-under-the-products-grid-in-productcatalogsection-that-displays-browse-all-products-text-with-a-link-to-the-catalog",
+      "featureTitle": "Add a horizontal bar under the products grid in ProductCatalogSection that displays 'Browse All Products' text with a link to the catalog",
+      "files": [
+        "frontend/src/components/store/ProductCatalogSection.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

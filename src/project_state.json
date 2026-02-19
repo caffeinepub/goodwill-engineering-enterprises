@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-remove-the-search-and-category-filtering-functionality-from-productcatalogsection-component",
+      "title": "Remove the search and category filtering functionality from ProductCatalogSection component",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-horizontal-bar-under-the-products-grid-in-productcatalogsection-that-displays-browse-all-products-text-with-a-link-to-the-catalog",
+      "title": "Add a horizontal bar under the products grid in ProductCatalogSection that displays 'Browse All Products' text with a link to the catalog",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Remove browsing functionality and replace with a bar under products saying 'browse all products' with link to catalog",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Goodwill Industrial",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -6,26 +6,26 @@
  * - Removes any path, query, or fragment
  * - Trims whitespace
  * - Removes trailing slashes
- * 
+ *
  * @param domain - The domain string to normalize
  * @returns The normalized domain string
  */
 export function normalizeDomain(domain: string): string {
-  if (!domain) return '';
+  if (!domain) return "";
 
   let normalized = domain.trim().toLowerCase();
 
   // Remove protocol
-  normalized = normalized.replace(/^https?:\/\//, '');
+  normalized = normalized.replace(/^https?:\/\//, "");
 
   // Remove www. prefix
-  normalized = normalized.replace(/^www\./, '');
+  normalized = normalized.replace(/^www\./, "");
 
   // Remove any path, query, or fragment
-  normalized = normalized.split('/')[0].split('?')[0].split('#')[0];
+  normalized = normalized.split("/")[0].split("?")[0].split("#")[0];
 
   // Remove trailing dots
-  normalized = normalized.replace(/\.+$/, '');
+  normalized = normalized.replace(/\.+$/, "");
 
   return normalized;
 }

@@ -1,8 +1,8 @@
 import Map "mo:core/Map";
 import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
-import Text "mo:core/Text";
 import Nat "mo:core/Nat";
+import Text "mo:core/Text";
 import Principal "mo:core/Principal";
 import Iter "mo:core/Iter";
 import MixinAuthorization "authorization/MixinAuthorization";
@@ -34,11 +34,11 @@ actor {
     id : Nat;
     name : Text;
     category : ProductCategory;
-    image : Text;
+    image : Text; // URL or path to image
     imageBlob : ?Storage.ExternalBlob;
     description : Text;
     specifications : [(Text, Text)];
-    price : ?Nat;
+    price : ?Nat; // Price in cents
     stockStatus : StockStatus;
   };
 
@@ -70,18 +70,26 @@ actor {
     company : ?Text;
   };
 
+  // Persistent state (incremental IDs, products, orders, carts, profiles)
   var productIdCounter : Nat = 0;
   var orderIdCounter : Nat = 0;
 
   let products = Map.empty<Nat, Product>();
   let orders = Map.empty<Nat, WhatsAppOrder>();
+  let customerCarts = Map.empty<Principal, [CartItem]>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
+  // Persistent company contact Gmail address
   var companyContactGmail : Text = "gee786110@gmail.com";
+
+  // Persistent custom domain request (stored in canonical form)
   var customDomainRequest : ?Text = null;
 
+  // Add mixin to enable prefabricated authentication system.
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
+  // User Profile Management ---------------------------
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
@@ -103,6 +111,8 @@ actor {
     };
     userProfiles.add(caller, profile);
   };
+
+  // Product Management --------------------------------
 
   public query ({ caller }) func getAllProducts() : async [Product] {
     products.values().toArray();
@@ -154,25 +164,7 @@ actor {
     };
   };
 
-  public shared ({ caller }) func addProducts(newProducts : [Product]) : async [Nat] {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
-      Runtime.trap("Unauthorized: Only admins can add products");
-    };
-
-    var currentId = productIdCounter;
-    let createdIds : [Nat] = newProducts.map(
-      func(product) {
-        let newProduct = { product with id = currentId };
-        products.add(currentId, newProduct);
-        let idToReturn = currentId;
-        currentId += 1;
-        idToReturn;
-      }
-    );
-
-    productIdCounter := currentId;
-    createdIds;
-  };
+  // Image Handling ------------------------------------
 
   public shared ({ caller }) func uploadProductImage(productId : Nat, externalBlob : Storage.ExternalBlob) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
@@ -208,6 +200,60 @@ actor {
       };
     };
   };
+
+  // Cart Management -----------------------------------
+
+  public shared ({ caller }) func addToCart(productId : Nat, quantity : Nat, customNotes : ?Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can manage carts");
+    };
+
+    let currentCart = switch (customerCarts.get(caller)) {
+      case (null) { [] };
+      case (?cart) { cart };
+    };
+
+    let newItem : CartItem = {
+      productId;
+      quantity;
+      customNotes;
+    };
+
+    let updatedCart = currentCart.concat([newItem]);
+    customerCarts.add(caller, updatedCart);
+  };
+
+  public shared ({ caller }) func removeFromCart(productId : Nat) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can manage carts");
+    };
+
+    let currentCart = switch (customerCarts.get(caller)) {
+      case (null) { [] };
+      case (?cart) { cart };
+    };
+
+    let filteredCart = currentCart.filter(
+      func(item) {
+        item.productId != productId;
+      }
+    );
+
+    customerCarts.add(caller, filteredCart);
+  };
+
+  public query ({ caller }) func getCart() : async [CartItem] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view carts");
+    };
+
+    switch (customerCarts.get(caller)) {
+      case (null) { [] };
+      case (?cart) { cart };
+    };
+  };
+
+  // WhatsApp Order Handling ---------------------------
 
   public shared ({ caller }) func submitWhatsAppOrder(cartItems : [CartItem], whatsappNumber : Text) : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
@@ -255,6 +301,7 @@ actor {
     switch (orders.get(orderId)) {
       case (null) { null };
       case (?order) {
+        // Only the customer who placed the order or an admin can view it
         if (order.customerPrincipal == caller or AccessControl.isAdmin(accessControlState, caller)) {
           ?order;
         } else {
@@ -276,6 +323,8 @@ actor {
     );
   };
 
+  // Utility Functions ---------------------------------
+
   public query ({ caller }) func checkStock(productId : Nat) : async StockStatus {
     switch (products.get(productId)) {
       case (null) { Runtime.trap("Product not found") };
@@ -292,13 +341,14 @@ actor {
   };
 
   public query ({ caller }) func getProductsBySearch(searchTerm : Text) : async [Product] {
-    let lowerSearchTerm = searchTerm.toLower();
     products.values().toArray().filter(
       func(product) {
-        product.name.toLower().contains(#text lowerSearchTerm) or product.description.toLower().contains(#text lowerSearchTerm);
+        product.name.contains(#text searchTerm) or product.description.contains(#text searchTerm);
       }
     );
   };
+
+  // Persistent Company Contact Gmail Functions ---------
 
   public shared ({ caller }) func updateCompanyContactGmail(newGmail : Text) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
@@ -311,17 +361,17 @@ actor {
     companyContactGmail;
   };
 
+  // Persistent Custom Domain Request (canonical form) --
+
   public shared ({ caller }) func setCustomDomainRequest(domain : Text) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can set custom domain request");
     };
+    // Store domain in canonical form
     customDomainRequest := ?domain;
   };
 
   public query ({ caller }) func getCustomDomainRequest() : async ?Text {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
-      Runtime.trap("Unauthorized: Only admins can view custom domain request");
-    };
     customDomainRequest;
   };
 };

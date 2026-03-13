@@ -3,98 +3,105 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --radius: 0.5rem;
-        /* White background */
-        --background: 1 0 0;
-        --foreground: 0.20 0.02 240;
-        --card: 0.99 0 0;
-        --card-foreground: 0.20 0.02 240;
-        --popover: 1 0 0;
-        --popover-foreground: 0.20 0.02 240;
-        /* Light Green for primary actions */
-        --primary: 0.75 0.15 145;
-        --primary-foreground: 0.15 0.02 240;
-        /* Muted green for secondary */
-        --secondary: 0.85 0.08 145;
-        --secondary-foreground: 0.20 0.02 240;
-        --muted: 0.95 0.01 145;
-        --muted-foreground: 0.50 0.01 240;
-        /* Crimson Red accent */
-        --accent: 0.55 0.22 15;
-        --accent-foreground: 0.99 0 0;
-        --destructive: 0.55 0.22 15;
-        --destructive-foreground: 0.99 0 0;
-        --border: 0.90 0.01 145;
-        --input: 0.90 0.01 145;
-        --ring: 0.75 0.15 145;
-        /* Light variants */
-        --metallic: 0.85 0.08 145;
-        --metallic-light: 0.92 0.04 145;
-    }
+  :root {
+    --radius: 0.5rem;
+    /* White background */
+    --background: 1 0 0;
+    --foreground: 0.2 0.02 240;
+    --card: 0.99 0 0;
+    --card-foreground: 0.2 0.02 240;
+    --popover: 1 0 0;
+    --popover-foreground: 0.2 0.02 240;
+    /* Light Green for primary actions */
+    --primary: 0.85 0.12 145;
+    --primary-foreground: 0.15 0.02 240;
+    /* Muted light green for secondary */
+    --secondary: 0.92 0.08 145;
+    --secondary-foreground: 0.2 0.02 240;
+    --muted: 0.96 0.02 145;
+    --muted-foreground: 0.5 0.01 240;
+    /* Vibrant Crimson Red accent */
+    --accent: 0.5 0.26 12;
+    --accent-foreground: 0.99 0 0;
+    --destructive: 0.5 0.26 12;
+    --destructive-foreground: 0.99 0 0;
+    --border: 0.93 0.02 145;
+    --input: 0.93 0.02 145;
+    --ring: 0.85 0.12 145;
+    /* Light variants */
+    --metallic: 0.9 0.06 145;
+    --metallic-light: 0.95 0.03 145;
+  }
 
-    .dark {
-        /* Dark background with subtle green tint */
-        --background: 0.18 0.02 145;
-        --foreground: 0.95 0.01 145;
-        --card: 0.22 0.02 145;
-        --card-foreground: 0.95 0.01 145;
-        --popover: 0.22 0.02 145;
-        --popover-foreground: 0.95 0.01 145;
-        /* Brighter light green for primary in dark mode */
-        --primary: 0.80 0.18 145;
-        --primary-foreground: 0.15 0.02 145;
-        /* Muted green for secondary */
-        --secondary: 0.35 0.05 145;
-        --secondary-foreground: 0.95 0.01 145;
-        --muted: 0.28 0.02 145;
-        --muted-foreground: 0.65 0.01 145;
-        /* Brighter Crimson Red accent in dark */
-        --accent: 0.60 0.24 15;
-        --accent-foreground: 0.95 0.01 145;
-        --destructive: 0.60 0.24 15;
-        --destructive-foreground: 0.95 0.01 145;
-        --border: 0.30 0.02 145;
-        --input: 0.30 0.02 145;
-        --ring: 0.80 0.18 145;
-        --metallic: 0.70 0.08 145;
-        --metallic-light: 0.80 0.10 145;
-    }
+  .dark {
+    /* Dark background with subtle green tint */
+    --background: 0.18 0.02 145;
+    --foreground: 0.95 0.01 145;
+    --card: 0.22 0.02 145;
+    --card-foreground: 0.95 0.01 145;
+    --popover: 0.22 0.02 145;
+    --popover-foreground: 0.95 0.01 145;
+    /* Brighter light green for primary in dark mode */
+    --primary: 0.85 0.15 145;
+    --primary-foreground: 0.15 0.02 145;
+    /* Muted light green for secondary */
+    --secondary: 0.45 0.08 145;
+    --secondary-foreground: 0.95 0.01 145;
+    --muted: 0.32 0.03 145;
+    --muted-foreground: 0.65 0.01 145;
+    /* Vibrant Crimson Red accent in dark */
+    --accent: 0.58 0.28 12;
+    --accent-foreground: 0.98 0.01 145;
+    --destructive: 0.58 0.28 12;
+    --destructive-foreground: 0.98 0.01 145;
+    --border: 0.35 0.03 145;
+    --input: 0.35 0.03 145;
+    --ring: 0.85 0.15 145;
+    --metallic: 0.75 0.1 145;
+    --metallic-light: 0.82 0.12 145;
+  }
 
-    * {
-        @apply border-border;
-    }
-    
-    html {
-        scroll-behavior: smooth;
-    }
-    
-    body {
-        @apply bg-background text-foreground;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Roboto", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Roboto", sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
 }
 
 @layer utilities {
-    .text-metallic {
-        color: oklch(var(--metallic));
-    }
-    
-    .text-metallic-light {
-        color: oklch(var(--metallic-light));
-    }
-    
-    .bg-metallic {
-        background-color: oklch(var(--metallic));
-    }
-    
-    .bg-metallic-light {
-        background-color: oklch(var(--metallic-light));
-    }
+  .text-metallic {
+    color: oklch(var(--metallic));
+  }
+
+  .text-metallic-light {
+    color: oklch(var(--metallic-light));
+  }
+
+  .bg-metallic {
+    background-color: oklch(var(--metallic));
+  }
+
+  .bg-metallic-light {
+    background-color: oklch(var(--metallic-light));
+  }
 }

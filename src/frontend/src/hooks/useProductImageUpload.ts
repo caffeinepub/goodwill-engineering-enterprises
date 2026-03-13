@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { ExternalBlob } from '../backend';
-import { fileToBytes, validateImageFile } from '../utils/fileToBytes';
+import { useState } from "react";
+import { ExternalBlob } from "../backend";
+import { fileToBytes, validateImageFile } from "../utils/fileToBytes";
 
 interface UploadState {
   isUploading: boolean;
@@ -36,7 +36,7 @@ export function useProductImageUpload(): UseProductImageUploadResult {
       setUploadState({
         isUploading: false,
         progress: 0,
-        error: validation.error || 'Invalid file',
+        error: validation.error || "Invalid file",
       });
       return null;
     }
@@ -52,12 +52,14 @@ export function useProductImageUpload(): UseProductImageUploadResult {
       const bytes = await fileToBytes(file);
 
       // Create ExternalBlob with progress tracking
-      const externalBlob = ExternalBlob.fromBytes(bytes).withUploadProgress((percentage) => {
-        setUploadState((prev) => ({
-          ...prev,
-          progress: percentage,
-        }));
-      });
+      const externalBlob = ExternalBlob.fromBytes(bytes).withUploadProgress(
+        (percentage) => {
+          setUploadState((prev) => ({
+            ...prev,
+            progress: percentage,
+          }));
+        },
+      );
 
       setUploadState({
         isUploading: false,
@@ -67,7 +69,8 @@ export function useProductImageUpload(): UseProductImageUploadResult {
 
       return externalBlob;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to upload image';
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to upload image";
       setUploadState({
         isUploading: false,
         progress: 0,

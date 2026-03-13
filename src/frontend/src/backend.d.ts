@@ -75,7 +75,7 @@ export enum UserRole {
 }
 export interface backendInterface {
     addProduct(product: Product): Promise<bigint>;
-    addProducts(newProducts: Array<Product>): Promise<Array<bigint>>;
+    addToCart(productId: bigint, quantity: bigint, customNotes: string | null): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkStock(productId: bigint): Promise<StockStatus>;
     deleteProduct(id: bigint): Promise<void>;
@@ -85,6 +85,7 @@ export interface backendInterface {
     getAllProducts(): Promise<Array<Product>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getCart(): Promise<Array<CartItem>>;
     getCompanyContactGmail(): Promise<string>;
     getCustomDomainRequest(): Promise<string | null>;
     getMyOrders(): Promise<Array<WhatsAppOrder>>;
@@ -93,6 +94,7 @@ export interface backendInterface {
     getProductsBySearch(searchTerm: string): Promise<Array<Product>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    removeFromCart(productId: bigint): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setCustomDomainRequest(domain: string): Promise<void>;
     submitWhatsAppOrder(cartItems: Array<CartItem>, whatsappNumber: string): Promise<bigint>;

@@ -1,13 +1,13 @@
-import { ProductCategoriesGrid } from './ProductCategoriesGrid';
+import { Button } from "@/components/ui/button";
+import { ProductCategoriesGrid } from "./ProductCategoriesGrid";
 
-export function ProductCategoriesSection() {
-  const scrollToProducts = () => {
-    const element = document.getElementById('product-catalog');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+interface ProductCategoriesSectionProps {
+  onNavigate: (view: "catalog") => void;
+}
 
+export function ProductCategoriesSection({
+  onNavigate,
+}: ProductCategoriesSectionProps) {
   return (
     <section id="products" className="py-20 md:py-32 bg-muted/30">
       <div className="container">
@@ -16,20 +16,23 @@ export function ProductCategoriesSection() {
             Our <span className="text-primary">Product</span> Range
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            From WD-40 <span className="text-accent">lubricants</span> to advanced <span className="text-accent">fluid sealing solutions</span>, 
-            we supply the products that keep your operations running smoothly.
+            From WD-40 <span className="text-accent">lubricants</span> to
+            advanced{" "}
+            <span className="text-accent">fluid sealing solutions</span>, we
+            supply the products that keep your operations running smoothly.
           </p>
         </div>
-        
+
         <ProductCategoriesGrid />
-        
+
         <div className="text-center mt-12">
-          <button
-            onClick={scrollToProducts}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-semibold shadow-industrial-lg rounded-md transition-colors"
+          <Button
+            onClick={() => onNavigate("catalog")}
+            size="lg"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-semibold shadow-industrial-lg"
           >
             Browse All Products
-          </button>
+          </Button>
         </div>
       </div>
     </section>

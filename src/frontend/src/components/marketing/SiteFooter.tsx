@@ -1,10 +1,11 @@
-import { Heart } from 'lucide-react';
+import { Heart } from "lucide-react";
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
-  const appIdentifier = typeof window !== 'undefined' 
-    ? encodeURIComponent(window.location.hostname) 
-    : 'goodwill-engineering';
+  const appIdentifier =
+    typeof window !== "undefined"
+      ? encodeURIComponent(window.location.hostname)
+      : "goodwill-engineering";
 
   return (
     <footer className="border-t border-border/40 bg-muted/30 py-12">
@@ -15,21 +16,22 @@ export function SiteFooter() {
               Goodwill Engineering Enterprises
             </h2>
           </div>
-          
+
           <div className="text-center space-y-2">
             <p className="text-sm text-muted-foreground font-semibold">
               Where Professionals Build with Confidence.
             </p>
             <p className="text-xs text-muted-foreground">
-              © {currentYear} Goodwill Engineering Enterprises. All rights reserved.
+              © {currentYear} Goodwill Engineering Enterprises. All rights
+              reserved.
             </p>
           </div>
-          
+
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Built with</span>
             <Heart className="h-4 w-4 text-accent fill-accent" />
             <span>using</span>
-            <a 
+            <a
               href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${appIdentifier}`}
               target="_blank"
               rel="noopener noreferrer"

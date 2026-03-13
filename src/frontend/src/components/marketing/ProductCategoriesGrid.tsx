@@ -1,38 +1,49 @@
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Droplet, Package, Shield, Disc, Layers, Wrench } from 'lucide-react';
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Disc, Droplet, Layers, Package, Shield, Wrench } from "lucide-react";
 
 export function ProductCategoriesGrid() {
   const categories = [
     {
       icon: Droplet,
-      title: 'Lubricants',
-      description: 'High-performance industrial lubricants for machinery, equipment, and automotive applications.'
+      title: "Lubricants",
+      description:
+        "High-performance industrial lubricants for machinery, equipment, and automotive applications.",
     },
     {
       icon: Package,
-      title: 'Mechanical Packing',
-      description: 'Premium mechanical packing solutions for pumps, valves, and rotating equipment.'
+      title: "Mechanical Packing",
+      description:
+        "Premium mechanical packing solutions for pumps, valves, and rotating equipment.",
     },
     {
       icon: Shield,
-      title: 'Fluid Sealants',
-      description: 'Advanced fluid sealing compounds for leak-proof, high-grade industrial and domestic applications.'
+      title: "Fluid Sealants",
+      description:
+        "Advanced fluid sealing compounds for leak-proof, high-grade industrial and domestic applications.",
     },
     {
       icon: Disc,
-      title: 'Brake Liners',
-      description: 'Durable, heat-resistant brake liners engineered for safety and reliable stopping power.'
+      title: "Brake Liners",
+      description:
+        "Durable, heat-resistant brake liners engineered for safety and reliable stopping power.",
     },
     {
       icon: Layers,
-      title: 'Ceramic Fibre & Glass Products',
-      description: 'High-temperature insulation materials including ceramic fibre blankets, boards, and glass products.'
+      title: "Ceramic Fibre & Glass Products",
+      description:
+        "High-temperature insulation materials including ceramic fibre blankets, boards, and glass products.",
     },
     {
       icon: Wrench,
-      title: 'Gland Packings',
-      description: 'Professional-grade gland packing materials for effective sealing in pumps and valves.'
-    }
+      title: "Gland Packings",
+      description:
+        "Professional-grade gland packing materials for effective sealing in pumps and valves.",
+    },
   ];
 
   return (
@@ -40,8 +51,8 @@ export function ProductCategoriesGrid() {
       {categories.map((category) => {
         const Icon = category.icon;
         return (
-          <Card 
-            key={category.title} 
+          <Card
+            key={category.title}
             className="group hover:shadow-industrial transition-all duration-300 hover:border-primary/50 cursor-pointer"
           >
             <CardHeader className="space-y-4">

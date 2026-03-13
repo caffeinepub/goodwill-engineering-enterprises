@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
-import { Shield, Loader2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useIsCallerAdmin } from '../../hooks/useQueries';
-import { useInternetIdentity } from '../../hooks/useInternetIdentity';
-import { LoginButton } from '../auth/LoginButton';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2, Shield } from "lucide-react";
+import type { ReactNode } from "react";
+import { useInternetIdentity } from "../../hooks/useInternetIdentity";
+import { useIsCallerAdmin } from "../../hooks/useQueries";
+import { LoginButton } from "../auth/LoginButton";
 
 interface AdminGuardProps {
   children: ReactNode;

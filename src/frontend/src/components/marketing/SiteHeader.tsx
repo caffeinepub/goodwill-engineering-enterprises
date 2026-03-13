@@ -1,48 +1,60 @@
-import { useState } from 'react';
-import { Menu, Phone, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
-import { CONTACT_CONFIG, View } from '../../App';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Menu, Phone, ShieldCheck, ShoppingCart, X } from "lucide-react";
+import { useState } from "react";
+import { CONTACT_CONFIG } from "../../App";
+import { useCart } from "../../hooks/useCart";
 
 interface SiteHeaderProps {
-  currentView: View;
-  onNavigate: (view: View) => void;
+  currentView: string;
+  onNavigate: (
+    view: "home" | "catalog" | "cart" | "checkout" | "admin",
+  ) => void;
 }
 
 export function SiteHeader({ currentView, onNavigate }: SiteHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { getItemCount } = useCart();
+  const itemCount = getItemCount();
 
   const scrollToSection = (sectionId: string) => {
-    if (currentView !== 'home') {
-      onNavigate('home');
+    if (currentView !== "home") {
+      onNavigate("home");
       setTimeout(() => {
         const element = document.getElementById(sectionId);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          element.scrollIntoView({ behavior: "smooth" });
         }
       }, 100);
     } else {
       const element = document.getElementById(sectionId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: "smooth" });
       }
     }
     setIsOpen(false);
   };
 
   const navLinks = [
-    { label: 'Home', action: () => onNavigate('home') },
-    { label: 'About', id: 'about' },
-    { label: 'Products', id: 'product-catalog' },
-    { label: 'Why Choose Us', id: 'why-choose' },
-    { label: 'Contact', id: 'contact' }
+    { label: "Home", action: () => onNavigate("home") },
+    { label: "About", id: "about" },
+    { label: "Products", action: () => onNavigate("catalog") },
+    { label: "Why Choose Us", id: "why-choose" },
+    { label: "Contact", id: "contact" },
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <button 
-          onClick={() => onNavigate('home')}
+        <button
+          type="button"
+          onClick={() => onNavigate("home")}
           className="flex items-center hover:opacity-80 transition-opacity"
         >
           <h1 className="text-lg md:text-xl font-bold text-foreground tracking-tight">
@@ -54,6 +66,7 @@ export function SiteHeader({ currentView, onNavigate }: SiteHeaderProps) {
         <nav className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <button
+              type="button"
               key={link.label}
               onClick={() => {
                 if (link.action) {
@@ -70,12 +83,29 @@ export function SiteHeader({ currentView, onNavigate }: SiteHeaderProps) {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => onNavigate('admin')}
+            onClick={() => onNavigate("cart")}
+            className="relative"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {itemCount > 0 && (
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                {itemCount}
+              </Badge>
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onNavigate("admin")}
             title="Admin"
           >
             <ShieldCheck className="h-5 w-5" />
           </Button>
-          <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button
+            asChild
+            size="sm"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
             <a href={CONTACT_CONFIG.phoneLink}>
               <Phone className="mr-2 h-4 w-4" />
               Call Now
@@ -85,6 +115,19 @@ export function SiteHeader({ currentView, onNavigate }: SiteHeaderProps) {
 
         {/* Mobile Navigation */}
         <div className="flex md:hidden items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onNavigate("cart")}
+            className="relative"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {itemCount > 0 && (
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                {itemCount}
+              </Badge>
+            )}
+          </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -97,6 +140,7 @@ export function SiteHeader({ currentView, onNavigate }: SiteHeaderProps) {
                 {navLinks.map((link) => (
                   <SheetClose asChild key={link.label}>
                     <button
+                      type="button"
                       onClick={() => {
                         if (link.action) {
                           link.action();
@@ -113,7 +157,7 @@ export function SiteHeader({ currentView, onNavigate }: SiteHeaderProps) {
                 <SheetClose asChild>
                   <Button
                     variant="outline"
-                    onClick={() => onNavigate('admin')}
+                    onClick={() => onNavigate("admin")}
                     className="justify-start"
                   >
                     <ShieldCheck className="mr-2 h-4 w-4" />
@@ -121,7 +165,10 @@ export function SiteHeader({ currentView, onNavigate }: SiteHeaderProps) {
                   </Button>
                 </SheetClose>
                 <SheetClose asChild>
-                  <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground mt-4">
+                  <Button
+                    asChild
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground mt-4"
+                  >
                     <a href={CONTACT_CONFIG.phoneLink}>
                       <Phone className="mr-2 h-4 w-4" />
                       Call Now

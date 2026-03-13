@@ -168,7 +168,7 @@ export interface backendInterface {
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addProduct(product: Product): Promise<bigint>;
-    addProducts(newProducts: Array<Product>): Promise<Array<bigint>>;
+    addToCart(productId: bigint, quantity: bigint, customNotes: string | null): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkStock(productId: bigint): Promise<StockStatus>;
     deleteProduct(id: bigint): Promise<void>;
@@ -178,6 +178,7 @@ export interface backendInterface {
     getAllProducts(): Promise<Array<Product>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getCart(): Promise<Array<CartItem>>;
     getCompanyContactGmail(): Promise<string>;
     getCustomDomainRequest(): Promise<string | null>;
     getMyOrders(): Promise<Array<WhatsAppOrder>>;
@@ -186,6 +187,7 @@ export interface backendInterface {
     getProductsBySearch(searchTerm: string): Promise<Array<Product>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    removeFromCart(productId: bigint): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setCustomDomainRequest(domain: string): Promise<void>;
     submitWhatsAppOrder(cartItems: Array<CartItem>, whatsappNumber: string): Promise<bigint>;
@@ -309,17 +311,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async addProducts(arg0: Array<Product>): Promise<Array<bigint>> {
+    async addToCart(arg0: bigint, arg1: bigint, arg2: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.addProducts(await to_candid_vec_n15(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.addToCart(arg0, arg1, to_candid_opt_n15(this._uploadFile, this._downloadFile, arg2));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addProducts(await to_candid_vec_n15(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.addToCart(arg0, arg1, to_candid_opt_n15(this._uploadFile, this._downloadFile, arg2));
             return result;
         }
     }
@@ -449,6 +451,20 @@ export class Backend implements backendInterface {
             return from_candid_UserRole_n39(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getCart(): Promise<Array<CartItem>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCart();
+                return from_candid_vec_n32(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCart();
+            return from_candid_vec_n32(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getCompanyContactGmail(): Promise<string> {
         if (this.processError) {
             try {
@@ -558,6 +574,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isCallerAdmin();
+            return result;
+        }
+    }
+    async removeFromCart(arg0: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.removeFromCart(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.removeFromCart(arg0);
             return result;
         }
     }
@@ -906,6 +936,9 @@ function to_candid__CaffeineStorageRefillInformation_n2(_uploadFile: (file: Exte
 function to_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CaffeineStorageRefillInformation | null): [] | [__CaffeineStorageRefillInformation] {
     return value === null ? candid_none() : candid_some(to_candid__CaffeineStorageRefillInformation_n2(_uploadFile, _downloadFile, value));
 }
+function to_candid_opt_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: string | null): [] | [string] {
+    return value === null ? candid_none() : candid_some(value);
+}
 function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     proposed_top_up_amount?: bigint;
 }): {
@@ -1058,9 +1091,6 @@ function to_candid_variant_n48(_uploadFile: (file: ExternalBlob) => Promise<Uint
     } : value == OrderStatus.confirmed ? {
         confirmed: null
     } : value;
-}
-async function to_candid_vec_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<Product>): Promise<Array<_Product>> {
-    return await Promise.all(value.map(async (x)=>await to_candid_Product_n8(_uploadFile, _downloadFile, x)));
 }
 function to_candid_vec_n44(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<CartItem>): Array<_CartItem> {
     return value.map((x)=>to_candid_CartItem_n45(_uploadFile, _downloadFile, x));

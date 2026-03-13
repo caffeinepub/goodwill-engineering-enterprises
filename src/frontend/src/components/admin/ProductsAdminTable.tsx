@@ -1,22 +1,28 @@
-import { useState } from 'react';
-import { Plus, Pencil, Trash2, Image as ImageIcon, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { useGetAllProducts, useDeleteProduct } from '../../hooks/useQueries';
-import { ProductEditorDialog } from './ProductEditorDialog';
-import { BulkImportProductsDialog } from './BulkImportProductsDialog';
-import type { Product } from '../../backend';
-import { toast } from 'sonner';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Image as ImageIcon, Pencil, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { Product } from "../../backend";
+import { useDeleteProduct, useGetAllProducts } from "../../hooks/useQueries";
+import { ProductEditorDialog } from "./ProductEditorDialog";
 
 const categoryLabels: Record<string, string> = {
-  mechanicalPackings: 'Mechanical Packings',
-  fluidSealants: 'Fluid Sealants',
-  compressedAsbestosJointingSheets: 'Asbestos Jointing Sheets',
-  nonAsbestosJointingSheets: 'Non-Asbestos Jointing Sheets',
-  wd40Products: 'WD-40 Products',
+  mechanicalPackings: "Mechanical Packings",
+  fluidSealants: "Fluid Sealants",
+  compressedAsbestosJointingSheets: "Asbestos Jointing Sheets",
+  nonAsbestosJointingSheets: "Non-Asbestos Jointing Sheets",
+  wd40Products: "WD-40 Products",
 };
 
 export function ProductsAdminTable() {
@@ -24,17 +30,16 @@ export function ProductsAdminTable() {
   const deleteProduct = useDeleteProduct();
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isBulkImportOpen, setIsBulkImportOpen] = useState(false);
 
   const handleDelete = async (id: bigint) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
       await deleteProduct.mutateAsync(id);
-      toast.success('Product deleted successfully');
+      toast.success("Product deleted successfully");
     } catch (error) {
-      console.error('Failed to delete product:', error);
-      toast.error('Failed to delete product');
+      console.error("Failed to delete product:", error);
+      toast.error("Failed to delete product");
     }
   };
 
@@ -48,12 +53,20 @@ export function ProductsAdminTable() {
     setIsDialogOpen(true);
   };
 
-  const getStockBadge = (stockStatus: Product['stockStatus']) => {
-    if ('inStock' in stockStatus) {
-      return <Badge variant="default">In Stock ({stockStatus.inStock.toString()})</Badge>;
+  const getStockBadge = (stockStatus: Product["stockStatus"]) => {
+    if ("inStock" in stockStatus) {
+      return (
+        <Badge variant="default">
+          In Stock ({stockStatus.inStock.toString()})
+        </Badge>
+      );
     }
-    if ('limited' in stockStatus) {
-      return <Badge variant="secondary">Limited ({stockStatus.limited.toString()})</Badge>;
+    if ("limited" in stockStatus) {
+      return (
+        <Badge variant="secondary">
+          Limited ({stockStatus.limited.toString()})
+        </Badge>
+      );
     }
     return <Badge variant="destructive">Out of Stock</Badge>;
   };
@@ -62,7 +75,7 @@ export function ProductsAdminTable() {
     if (product.imageBlob) {
       return product.imageBlob.getDirectURL();
     }
-    return product.image || '';
+    return product.image || "";
   };
 
   if (isLoading) {
@@ -73,8 +86,8 @@ export function ProductsAdminTable() {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-16 w-full" />
+            {["s1", "s2", "s3", "s4", "s5"].map((k) => (
+              <Skeleton key={k} className="h-16 w-full" />
             ))}
           </div>
         </CardContent>
@@ -87,16 +100,10 @@ export function ProductsAdminTable() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Products</CardTitle>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setIsBulkImportOpen(true)}>
-              <Upload className="mr-2 h-4 w-4" />
-              Bulk Import
-            </Button>
-            <Button onClick={handleAdd}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-          </div>
+          <Button onClick={handleAdd}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Product
+          </Button>
         </CardHeader>
         <CardContent>
           <Table>
@@ -112,7 +119,10 @@ export function ProductsAdminTable() {
             <TableBody>
               {products.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={5}
+                    className="text-center text-muted-foreground"
+                  >
                     No products found. Add your first product to get started.
                   </TableCell>
                 </TableRow>
@@ -134,9 +144,13 @@ export function ProductsAdminTable() {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="font-medium">{product.name}</TableCell>
+                      <TableCell className="font-medium">
+                        {product.name}
+                      </TableCell>
                       <TableCell>{categoryLabels[product.category]}</TableCell>
-                      <TableCell>{getStockBadge(product.stockStatus)}</TableCell>
+                      <TableCell>
+                        {getStockBadge(product.stockStatus)}
+                      </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button
@@ -169,11 +183,6 @@ export function ProductsAdminTable() {
         product={editingProduct}
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-      />
-
-      <BulkImportProductsDialog
-        open={isBulkImportOpen}
-        onOpenChange={setIsBulkImportOpen}
       />
     </>
   );

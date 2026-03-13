@@ -1,27 +1,45 @@
-import { useState } from 'react';
-import { Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { useGetAllOrders } from '../../hooks/useQueries';
-import { OrderDetailDrawer } from './OrderDetailDrawer';
-import type { WhatsAppOrder } from '../../backend';
-import { OrderStatus } from '../../backend';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Eye } from "lucide-react";
+import { useState } from "react";
+import type { WhatsAppOrder } from "../../backend";
+import { OrderStatus } from "../../backend";
+import { useGetAllOrders } from "../../hooks/useQueries";
+import { OrderDetailDrawer } from "./OrderDetailDrawer";
 
 export function OrdersAdminTable() {
   const { data: orders = [], isLoading } = useGetAllOrders();
-  const [selectedOrder, setSelectedOrder] = useState<WhatsAppOrder | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<WhatsAppOrder | null>(
+    null,
+  );
 
   const getStatusBadge = (status: OrderStatus) => {
     const statusMap = {
-      [OrderStatus.new_]: { label: 'New', variant: 'default' as const },
-      [OrderStatus.contacted]: { label: 'Contacted', variant: 'secondary' as const },
-      [OrderStatus.confirmed]: { label: 'Confirmed', variant: 'default' as const },
-      [OrderStatus.rejected]: { label: 'Rejected', variant: 'destructive' as const },
+      [OrderStatus.new_]: { label: "New", variant: "default" as const },
+      [OrderStatus.contacted]: {
+        label: "Contacted",
+        variant: "secondary" as const,
+      },
+      [OrderStatus.confirmed]: {
+        label: "Confirmed",
+        variant: "default" as const,
+      },
+      [OrderStatus.rejected]: {
+        label: "Rejected",
+        variant: "destructive" as const,
+      },
     };
-    
+
     const info = statusMap[status] || statusMap[OrderStatus.new_];
     return <Badge variant={info.variant}>{info.label}</Badge>;
   };
@@ -39,8 +57,8 @@ export function OrdersAdminTable() {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-16 w-full" />
+            {["s1", "s2", "s3", "s4", "s5"].map((k) => (
+              <Skeleton key={k} className="h-16 w-full" />
             ))}
           </div>
         </CardContent>
@@ -69,14 +87,19 @@ export function OrdersAdminTable() {
             <TableBody>
               {orders.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={6}
+                    className="text-center text-muted-foreground"
+                  >
                     No orders yet.
                   </TableCell>
                 </TableRow>
               ) : (
                 orders.map((order) => (
                   <TableRow key={order.id.toString()}>
-                    <TableCell className="font-mono">#{order.id.toString()}</TableCell>
+                    <TableCell className="font-mono">
+                      #{order.id.toString()}
+                    </TableCell>
                     <TableCell>{formatDate(order.timestamp)}</TableCell>
                     <TableCell>{order.cartItems.length} items</TableCell>
                     <TableCell>{order.whatsappNumber}</TableCell>

@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AdminGuard } from '../components/admin/AdminGuard';
-import { ProductsAdminTable } from '../components/admin/ProductsAdminTable';
-import { OrdersAdminTable } from '../components/admin/OrdersAdminTable';
-import { AdminSettingsTab } from '../components/admin/AdminSettingsTab';
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { AdminGuard } from "../components/admin/AdminGuard";
+import { AdminSettingsTab } from "../components/admin/AdminSettingsTab";
+import { OrdersAdminTable } from "../components/admin/OrdersAdminTable";
+import { ProductsAdminTable } from "../components/admin/ProductsAdminTable";
 
 interface AdminPageProps {
-  onNavigate: (view: 'home') => void;
+  onNavigate: (view: "home") => void;
 }
 
 export function AdminPage({ onNavigate }: AdminPageProps) {
@@ -19,13 +19,15 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
           <div className="mb-8">
             <Button
               variant="ghost"
-              onClick={() => onNavigate('home')}
+              onClick={() => onNavigate("home")}
               className="mb-4"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Home
             </Button>
-            <h1 className="text-4xl font-bold tracking-tight mb-2">Admin Panel</h1>
+            <h1 className="text-4xl font-bold tracking-tight mb-2">
+              Admin Panel
+            </h1>
             <p className="text-muted-foreground">Manage products and orders</p>
           </div>
 

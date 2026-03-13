@@ -1,67 +1,69 @@
-import { useState } from 'react';
-import { MessageCircle, AlertTriangle } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import type { Product, ProductCategory } from '../../backend';
-import { toast } from 'sonner';
-import { CONTACT_CONFIG } from '../../App';
-import { generateWhatsAppInquiryUrl } from '../../utils/whatsappOrderMessage';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { AlertTriangle, ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { Product, ProductCategory } from "../../backend";
+import { useCart } from "../../hooks/useCart";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const categoryLabels: Record<ProductCategory, string> = {
-  mechanicalPackings: 'Mechanical Packings',
-  fluidSealants: 'Fluid Sealants',
-  compressedAsbestosJointingSheets: 'Asbestos Jointing Sheets',
-  nonAsbestosJointingSheets: 'Non-Asbestos Jointing Sheets',
-  wd40Products: 'WD-40 Products',
+  mechanicalPackings: "Mechanical Packings",
+  fluidSealants: "Fluid Sealants",
+  compressedAsbestosJointingSheets: "Asbestos Jointing Sheets",
+  nonAsbestosJointingSheets: "Non-Asbestos Jointing Sheets",
+  wd40Products: "WD-40 Products",
 };
 
-const getStockLabel = (stockStatus: Product['stockStatus']) => {
-  if ('inStock' in stockStatus) {
-    return { label: 'In Stock', variant: 'default' as const };
+const getStockLabel = (stockStatus: Product["stockStatus"]) => {
+  if ("inStock" in stockStatus) {
+    return { label: "In Stock", variant: "default" as const };
   }
-  if ('limited' in stockStatus) {
-    return { label: 'Limited Stock', variant: 'secondary' as const };
+  if ("limited" in stockStatus) {
+    return { label: "Limited Stock", variant: "secondary" as const };
   }
-  return { label: 'Out of Stock', variant: 'destructive' as const };
+  return { label: "Out of Stock", variant: "destructive" as const };
 };
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [notes, setNotes] = useState('');
   const [asbestosAcknowledged, setAsbestosAcknowledged] = useState(false);
 
-  const isAsbestos = product.category === 'compressedAsbestosJointingSheets';
+  const isAsbestos = product.category === "compressedAsbestosJointingSheets";
   const stockInfo = getStockLabel(product.stockStatus);
-  const isOutOfStock = 'outOfStock' in product.stockStatus;
+  const isOutOfStock = "outOfStock" in product.stockStatus;
 
-  const handleInquiry = () => {
+  const handleAddToCart = () => {
     if (isAsbestos && !asbestosAcknowledged) {
-      toast.error('Please acknowledge the asbestos warning before proceeding');
+      toast.error(
+        "Please acknowledge the asbestos warning before adding to cart",
+      );
       return;
     }
 
-    const whatsappUrl = generateWhatsAppInquiryUrl(
-      CONTACT_CONFIG.whatsappNumber1,
-      product,
-      quantity,
-      notes || undefined
-    );
-
-    window.open(whatsappUrl, '_blank');
-    toast.success('Opening WhatsApp to inquire about this product');
+    addToCart(product.id, quantity);
+    toast.success(`Added ${quantity} ${product.name} to cart`);
+    setQuantity(1);
+    setAsbestosAcknowledged(false);
   };
 
   // Get image URL from imageBlob or fallback to image field
-  const imageUrl = product.imageBlob ? product.imageBlob.getDirectURL() : product.image;
+  const imageUrl = product.imageBlob
+    ? product.imageBlob.getDirectURL()
+    : product.image;
 
   return (
     <Card className="flex flex-col h-full hover:shadow-industrial transition-shadow">
@@ -74,7 +76,7 @@ export function ProductCard({ product }: ProductCardProps) {
               className="w-full h-full object-cover"
               onError={(e) => {
                 // Hide broken images gracefully
-                e.currentTarget.style.display = 'none';
+                e.currentTarget.style.display = "none";
               }}
             />
           ) : (
@@ -87,11 +89,15 @@ export function ProductCard({ product }: ProductCardProps) {
           <CardTitle className="text-lg line-clamp-2">{product.name}</CardTitle>
           <Badge variant={stockInfo.variant}>{stockInfo.label}</Badge>
         </div>
-        <p className="text-xs text-muted-foreground">{categoryLabels[product.category]}</p>
+        <p className="text-xs text-muted-foreground">
+          {categoryLabels[product.category]}
+        </p>
       </CardHeader>
 
       <CardContent className="flex-1 space-y-3">
-        <p className="text-sm text-muted-foreground line-clamp-3">{product.description}</p>
+        <p className="text-sm text-muted-foreground line-clamp-3">
+          {product.description}
+        </p>
 
         {isAsbestos && (
           <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg space-y-2">
@@ -105,7 +111,9 @@ export function ProductCard({ product }: ProductCardProps) {
               <Checkbox
                 id={`asbestos-${product.id}`}
                 checked={asbestosAcknowledged}
-                onCheckedChange={(checked) => setAsbestosAcknowledged(checked as boolean)}
+                onCheckedChange={(checked) =>
+                  setAsbestosAcknowledged(checked as boolean)
+                }
               />
               <label
                 htmlFor={`asbestos-${product.id}`}
@@ -116,59 +124,44 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
         )}
-
-        <div className="space-y-2">
-          <Label htmlFor={`quantity-${product.id}`} className="text-sm">Quantity</Label>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              disabled={isOutOfStock}
-            >
-              -
-            </Button>
-            <Input
-              id={`quantity-${product.id}`}
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-              className="w-16 text-center"
-              min="1"
-              disabled={isOutOfStock}
-            />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setQuantity(quantity + 1)}
-              disabled={isOutOfStock}
-            >
-              +
-            </Button>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor={`notes-${product.id}`} className="text-sm">Special Requirements (Optional)</Label>
-          <Textarea
-            id={`notes-${product.id}`}
-            placeholder="e.g., size, specifications..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="min-h-[60px] resize-none"
-            disabled={isOutOfStock}
-          />
-        </div>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="flex-col gap-3">
+        <div className="flex items-center gap-2 w-full">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            disabled={isOutOfStock}
+          >
+            -
+          </Button>
+          <Input
+            type="number"
+            value={quantity}
+            onChange={(e) =>
+              setQuantity(Math.max(1, Number.parseInt(e.target.value) || 1))
+            }
+            className="w-16 text-center"
+            min="1"
+            disabled={isOutOfStock}
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setQuantity(quantity + 1)}
+            disabled={isOutOfStock}
+          >
+            +
+          </Button>
+        </div>
         <Button
-          onClick={handleInquiry}
+          onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className="w-full bg-primary hover:bg-primary/90"
+          className="w-full"
         >
-          <MessageCircle className="mr-2 h-4 w-4" />
-          Inquire via WhatsApp
+          <ShoppingCart className="mr-2 h-4 w-4" />
+          Add to Cart
         </Button>
       </CardFooter>
     </Card>
